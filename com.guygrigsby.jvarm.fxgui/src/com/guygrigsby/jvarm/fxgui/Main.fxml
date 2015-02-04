@@ -9,7 +9,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.guygrigsby.jvarm.fxgui.Controller">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -52,7 +52,12 @@
     </MenuBar>
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Button mnemonicParsing="false" text="Button">
+            <Button fx:id="startDebugButton" mnemonicParsing="false" onAction="#startDebug" text="Start Debug">
+               <HBox.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="stepButton" mnemonicParsing="false" onAction="#step" text="Step">
                <HBox.margin>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </HBox.margin>
@@ -75,7 +80,7 @@
         </AnchorPane>
             <AnchorPane>
                <children>
-                  <TextArea prefHeight="549.0" prefWidth="533.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <TextArea fx:id="editor" prefHeight="549.0" prefWidth="533.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
         <AnchorPane>
@@ -86,10 +91,10 @@
                         <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <TableView prefHeight="408.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <TableView fx:id="registersTable" prefHeight="408.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                       <columns>
-                                        <TableColumn prefWidth="75.0" text="Register" />
-                                        <TableColumn prefWidth="75.0" text="Contents" />
+                                        <TableColumn fx:id="registerNameCol" prefWidth="75.0" text="Register" />
+                                        <TableColumn fx:id="registerValueCol" prefWidth="75.0" text="Contents" />
                                       </columns>
                                     </TableView>
                                  </children></AnchorPane>
