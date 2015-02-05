@@ -1,7 +1,8 @@
 package com.guygrigsby.jvarm.fxgui;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.HashMap;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -13,16 +14,20 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.IntegerStringConverter;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.guygrigsby.jvarm.core.ArmProgram;
 import com.guygrigsby.jvarm.core.ArmSourceCompiler;
-import com.guygrigsby.jvarm.core.test.ArmSourceTokenizerTest;
+
 
 
 public class Controller {
+	
+	private static Logger logger = LogManager.getLogger();
 	
 	@FXML
 	private TextArea editor;
@@ -33,7 +38,7 @@ public class Controller {
 	@FXML
 	private TableColumn<ObservableMap.Entry<String, Integer>,String> registerNameCol;
 	@FXML 
-	private TableColumn<ObservableMap.Entry<String, Integer>,String> registerValueCol;
+	private TableColumn<ObservableMap.Entry<String, Integer>,Integer> registerValueCol;
 	
 	private ArmProgram program;
 	
@@ -41,25 +46,25 @@ public class Controller {
 	
 	@FXML
 	private void initialize() {
-        
+		editor.setText("ADD r0, r0, #1     ; r0 = r0 + r1\nADD r1, r0, #4     ; r0 = r0 + 4");
 
 	}
 	
 	@FXML
 	public void step() {
-		System.out.println("step");
+		logger.trace("Step");
 		program.step(registers);
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked", "unused" })
 	@FXML
 	public void startDebug() {
-		InputStream is = ArmSourceTokenizerTest.class.getResourceAsStream("add.s");
+		String sourceCode = editor.getText();
+		InputStream is = new ByteArrayInputStream(sourceCode.getBytes(StandardCharsets.UTF_8));
+		//InputStream is = ArmSourceTokenizerTest.class.getResourceAsStream("add.s");
 		program = new ArmSourceCompiler().compile(is);
-		registers = FXCollections.observableHashMap();
 		
-		registers.put("R0", 1);
-		registers.put("R1", 2);
+		createRegisters();
 		
 		registersTable.setEditable(true);
 		
@@ -72,24 +77,38 @@ public class Controller {
 		});
 		
 		registerNameCol.setCellFactory(TextFieldTableCell.forTableColumn());
-//		registerNameCol.setOnEditCommit((TableColumn.CellEditEvent<Map.Entry<String,Integer>, String> t) -> {
-//		    final String oldKey = t.getOldValue();
-//		    final Integer oldPrice = registers.get(oldKey);
-//		    registers.remove(oldKey);
-//		    registers.put(t.getNewValue(),oldPrice);
-//		});
 		
 		registerValueCol.setCellValueFactory((p) -> {
-		    return new SimpleStringProperty(p.getValue().getValue().toString());
+		    return new ReadOnlyObjectWrapper<Integer>(p.getValue().getValue());
 		});
 		
-		registerValueCol.setCellFactory(TextFieldTableCell.forTableColumn());
-//		registerValueCol.setOnEditCommit((TableColumn.CellEditEvent<Map.Entry<String,Integer>, String> t) -> {
-//			registers.put(t.getTableView().getItems().get(t.getTablePosition().getRow()).getKey(),//key
-//		           t.getNewValue());//val);
-//		});
+		registerValueCol.setCellFactory(TextFieldTableCell.<Map.Entry<String,Integer>, Integer>forTableColumn(new IntegerStringConverter()));
+
+		registerValueCol.setOnEditCommit((TableColumn.CellEditEvent<Map.Entry<String,Integer>, Integer> t) -> {
+			registers.put(t.getTableView().getItems().get(t.getTablePosition().getRow()).getKey(),//key
+		           t.getNewValue());//val);
+		});
 		registersTable.getItems().setAll(registers.entrySet());
 
 	}
 	
+	private void createRegisters() {
+		registers = FXCollections.observableHashMap();
+		registers.put("R0", 0);
+		registers.put("R1", 0);
+		registers.put("R2", 0);
+		registers.put("R3", 0);
+		registers.put("R4", 0);
+		registers.put("R5", 0);
+		registers.put("R6", 0);
+		registers.put("R7", 0);
+		registers.put("R8", 0);
+		registers.put("R9", 0);
+		registers.put("R10", 0);
+		registers.put("R11", 0);
+		registers.put("R10", 0);
+		registers.put("R13", 0);
+		registers.put("R14", 0);
+		registers.put("R15", 0);
+	}
 }
