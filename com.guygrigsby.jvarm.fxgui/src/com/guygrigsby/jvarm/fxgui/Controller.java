@@ -11,9 +11,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.IntegerStringConverter;
 
@@ -29,16 +31,14 @@ public class Controller {
 	
 	private static Logger logger = LogManager.getLogger();
 	
-	@FXML
-	private TextArea editor;
+	@FXML private TextArea editor;
 	
-	@FXML
-	private TableView<ObservableMap.Entry<String, Integer>> registersTable;
+	@FXML private TableView<ObservableMap.Entry<String, Integer>> registersTable;
 	
-	@FXML
-	private TableColumn<ObservableMap.Entry<String, Integer>,String> registerNameCol;
-	@FXML 
-	private TableColumn<ObservableMap.Entry<String, Integer>,Integer> registerValueCol;
+	@FXML private TableColumn<ObservableMap.Entry<String, Integer>,String> registerNameCol;
+	@FXML private TableColumn<ObservableMap.Entry<String, Integer>,Integer> registerValueCol;
+	@FXML private TitledPane registerPane;
+	@FXML private Accordion rightAccordion;
 	
 	private ArmProgram program;
 	
@@ -47,7 +47,7 @@ public class Controller {
 	@FXML
 	private void initialize() {
 		editor.setText("ADD r0, r0, #1     ; r0 = r0 + r1\nADD r1, r0, #4     ; r0 = r0 + 4");
-
+		rightAccordion.setExpandedPane(registerPane);
 	}
 	
 	@FXML
@@ -77,7 +77,7 @@ public class Controller {
 		});
 		
 		registerNameCol.setCellFactory(TextFieldTableCell.forTableColumn());
-		
+		registerNameCol.setEditable(false);
 		registerValueCol.setCellValueFactory((p) -> {
 		    return new ReadOnlyObjectWrapper<Integer>(p.getValue().getValue());
 		});
