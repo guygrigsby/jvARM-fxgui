@@ -46,7 +46,7 @@ public class Controller {
 	
 	@FXML
 	private void initialize() {
-		editor.setText("ADD r0, r0, #1     ; r0 = r0 + r1\nADD r1, r0, #4     ; r0 = r0 + 4");
+		editor.setText("ADD r0, r0, #1     ; r0 = r0 + r1\nADD r1, r0, #4     ; r0 = r0 + 4\nADD r0, r0, r0, LSL r0");
 		rightAccordion.setExpandedPane(registerPane);
 	}
 	
