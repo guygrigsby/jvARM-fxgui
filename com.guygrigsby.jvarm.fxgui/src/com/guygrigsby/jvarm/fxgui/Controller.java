@@ -43,7 +43,7 @@ public class Controller {
 	@FXML
 	private TableColumn<ObservableMap.Entry<String, Integer>, String> registerNameCol;
 	@FXML
-	private TableColumn<ObservableMap.Entry<String, Integer>, Integer> registerValueCol;
+	private TableColumn<ObservableMap.Entry<String, Integer>, String> registerValueCol;
 	@FXML
 	private TitledPane registerPane;
 	@FXML
@@ -94,22 +94,13 @@ public class Controller {
 		registerNameCol.setCellFactory(TextFieldTableCell.forTableColumn());
 		registerNameCol.setEditable(false);
 		registerValueCol.setCellValueFactory((p) -> {
-			return new ReadOnlyObjectWrapper<Integer>(p.getValue().getValue());
+			int value = p.getValue().getValue();
+			String hexString = String.format("%#010x\n", value); //0x00000000
+			return new SimpleStringProperty(hexString);
 		});
 
-		registerValueCol
-				.setCellFactory(TextFieldTableCell
-						.<Map.Entry<String, Integer>, Integer> forTableColumn(new IntegerStringConverter()));
+		registerValueCol.setCellFactory(TextFieldTableCell.forTableColumn());
 
-		registerValueCol
-				.setOnEditCommit((
-						TableColumn.CellEditEvent<Map.Entry<String, Integer>, Integer> t) -> {
-					registers.put(
-							t.getTableView().getItems()
-									.get(t.getTablePosition().getRow())
-									.getKey(),// key
-							t.getNewValue());// val);
-				});
 		registersTable.getItems().setAll(registers.entrySet());
 	}
 
@@ -148,6 +139,7 @@ public class Controller {
 		registers.put("R13", 0);
 		registers.put("R14", 0);
 		registers.put("R15", 0);
+		registers.put("CPSR", 0);
 	}
 
 	public void setStageAndSetupListeners(Stage stageIn) {
