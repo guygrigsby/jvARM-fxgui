@@ -6,9 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
@@ -22,13 +20,13 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.converter.IntegerStringConverter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.guygrigsby.jvarm.core.ArmProgram;
 import com.guygrigsby.jvarm.core.ArmSourceCompiler;
+import com.guygrigsby.jvarm.core.CompilerInfoCollector;
 
 public class Controller {
 
@@ -36,6 +34,9 @@ public class Controller {
 
 	@FXML
 	private TextArea editor;
+	
+	@FXML
+	private TextArea console;
 
 	@FXML
 	private TableView<ObservableMap.Entry<String, Integer>> registersTable;
@@ -73,10 +74,16 @@ public class Controller {
 		String sourceCode = editor.getText();
 		InputStream is = new ByteArrayInputStream(
 				sourceCode.getBytes(StandardCharsets.UTF_8));
-		// InputStream is =
-		// ArmSourceTokenizerTest.class.getResourceAsStream("add.s");
-		program = new ArmSourceCompiler().compile(is);
+		CompilerInfoCollector collector = new CompilerInfoCollector();
+		program = new ArmSourceCompiler().compile(is, collector);
 
+		if (collector.hasErrors()) {
+			String errorString = collector.getErrorsAsString();
+			console.appendText(errorString);
+			return;
+		} else {
+			console.setText("");
+		}
 		createRegisters();
 
 		registersTable.setEditable(true);
