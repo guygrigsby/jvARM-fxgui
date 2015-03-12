@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -27,6 +28,8 @@ import org.apache.logging.log4j.Logger;
 import com.guygrigsby.jvarm.core.ArmProgram;
 import com.guygrigsby.jvarm.core.ArmSourceCompiler;
 import com.guygrigsby.jvarm.core.CompilerInfoCollector;
+import com.guygrigsby.jvarm.core.InfoCollector;
+import com.guygrigsby.jvarm.core.Registers;
 
 public class Controller {
 
@@ -52,7 +55,7 @@ public class Controller {
 
 	private ArmProgram program;
 
-	private ObservableMap<String, Integer> registers;
+	private Registers registers;
 
 	private Stage stage;
 
@@ -74,7 +77,7 @@ public class Controller {
 		String sourceCode = editor.getText();
 		InputStream is = new ByteArrayInputStream(
 				sourceCode.getBytes(StandardCharsets.UTF_8));
-		CompilerInfoCollector collector = new CompilerInfoCollector();
+		InfoCollector collector = new CompilerInfoCollector();
 		program = new ArmSourceCompiler().compile(is, collector);
 
 		if (collector.hasErrors()) {
@@ -84,15 +87,11 @@ public class Controller {
 		} else {
 			console.setText("");
 		}
-		createRegisters();
-
+		Map<String, Integer> regMap = createRegistersMap();
+		registers = new Registers(regMap);
+		
 		registersTable.setEditable(true);
 
-		registers
-				.addListener((
-						MapChangeListener.Change<? extends String, ? extends Integer> change) -> {
-					registersTable.getItems().setAll(registers.entrySet());
-				});
 		registerNameCol.setComparator(new RegisterNameComparator());
 		registerNameCol.setCellValueFactory((p) -> {
 			return new SimpleStringProperty(p.getValue().getKey());
@@ -128,25 +127,14 @@ public class Controller {
 		editor.setText(contents);
 	}
 
-	private void createRegisters() {
-		registers = FXCollections.observableHashMap();
-		registers.put("R0", 0);
-		registers.put("R1", 0);
-		registers.put("R2", 0);
-		registers.put("R3", 0);
-		registers.put("R4", 0);
-		registers.put("R5", 0);
-		registers.put("R6", 0);
-		registers.put("R7", 0);
-		registers.put("R8", 0);
-		registers.put("R9", 0);
-		registers.put("R10", 0);
-		registers.put("R11", 0);
-		registers.put("R10", 0);
-		registers.put("R13", 0);
-		registers.put("R14", 0);
-		registers.put("R15", 0);
-		registers.put("CPSR", 0);
+	private Map<String, Integer> createRegistersMap() {
+		ObservableMap<String, Integer> registerMap = FXCollections.observableHashMap();
+		registerMap
+		.addListener((
+				MapChangeListener.Change<? extends String, ? extends Integer> change) -> {
+			registersTable.getItems().setAll(registerMap.entrySet());
+		});
+		return registerMap;
 	}
 
 	public void setStageAndSetupListeners(Stage stageIn) {
