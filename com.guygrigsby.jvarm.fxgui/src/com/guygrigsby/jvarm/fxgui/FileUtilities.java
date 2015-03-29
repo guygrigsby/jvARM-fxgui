@@ -1,6 +1,9 @@
 package com.guygrigsby.jvarm.fxgui;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -26,6 +29,18 @@ public class FileUtilities {
 			encoding = StandardCharsets.UTF_8;
 		}
 		return encoding;
+	}
+
+	public static void saveFile(String string, File openFile) {
+		try (PrintWriter out = new PrintWriter(openFile);) {
+			out.print(string);
+			out.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// TODO Auto-generated method stub
+		
 	}
 
 }
