@@ -79,6 +79,7 @@ public class Controller {
 		logger.trace("Step");
 		program.step(registers);
 		highlightEditorLine(program.getLineUnderExecution());
+		registersTable.sort();
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked", "unused" })
@@ -119,6 +120,7 @@ public class Controller {
 
 		registersTable.getItems().setAll(registers.entrySet());
 		highlightEditorLine(program.getLineUnderExecution());
+		registersTable.sort();
 	}
 
 	@FXML
