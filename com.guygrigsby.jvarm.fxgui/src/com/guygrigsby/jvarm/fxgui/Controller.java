@@ -118,7 +118,7 @@ public class Controller {
 		registerValueCol.setCellFactory(TextFieldTableCell.forTableColumn());
 
 		registersTable.getItems().setAll(registers.entrySet());
-		highlightEditorLine(1);
+		highlightEditorLine(program.getLineUnderExecution());
 	}
 
 	@FXML
@@ -165,34 +165,26 @@ public class Controller {
 		String text = editor.getText();
 		int anchor = 0;
 		int carat = 0;
-		if (lineNo == 1) {
-			anchor = 0;
-			for (int k = 0; k < text.length(); k++) {
-				char current = text.charAt(k);
-				if (current == '\n') {
-					carat = k;
+		int newLineCount = 0;
+		for (int k = 0; k < text.length(); k++) {
+			char current = text.charAt(k);
+			if (current == '\n' ) {
+				newLineCount++;
+				if ((lineNo - 1) == newLineCount) {
+					anchor = k;
 					break;
 				}
 			}
-		} else {
-			int newLineCount = 0;
-			for (int k = 0; k < text.length(); k++) {
-				char current = text.charAt(k);
-				if (current == '\n' ) {
-					newLineCount++;
-					if ((lineNo - 1) == newLineCount) {
-						anchor = k;
-						break;
-					}
-				}
+		}
+		for (int k = anchor + 1; k < text.length(); k++) {
+			char current = text.charAt(k);
+			if (current == '\n') {
+				carat = k;
+				break;
 			}
-			for (int k = anchor + 1; k < text.length(); k++) {
-				char current = text.charAt(k);
-				if (current == '\n') {
-					carat = k;
-					break;
-				}
-			}
+		}
+		if (carat == 0) {
+			carat = text.length() - 1;
 		}
 		final int finalAnchor = anchor;
 		final int finalCarat = carat;
