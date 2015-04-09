@@ -70,7 +70,10 @@ public class Controller {
 		File testFile = new File(path);
 		//loadFile(testFile);
 		editor.setStyle("-fx-highlight-fill: yellow; -fx-highlight-text-fill: black;");
-		editor.setText("label\nADD r0, r0, #1     ; r0 = r0 + r1\nADD r1, r0, #4     ; r0 = r0 + 4\nADD r0, r0, r0, LSL r0\nB label");
+		editor.setText("label\n"
+				+ "ADD r0, r0, #1     ; \n"
+				+ "CMP r0, #10\n"
+				+ "BNE label");
 		rightAccordion.setExpandedPane(registerPane);
 	}
 
@@ -154,7 +157,7 @@ public class Controller {
 		registerMap
 		.addListener((
 				MapChangeListener.Change<? extends String, ? extends Integer> change) -> {
-			registersTable.getItems().setAll(registerMap.entrySet());
+			registersTable.getItems().setAll(registers.entrySet());
 		});
 		return registerMap;
 	}
