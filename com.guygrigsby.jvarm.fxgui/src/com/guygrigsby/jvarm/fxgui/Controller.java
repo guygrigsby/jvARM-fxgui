@@ -79,10 +79,21 @@ public class Controller {
 
 	@FXML
 	public void step() {
-		logger.trace("Step");
-		program.step(registers);
-		highlightEditorLine(program.getLineUnderExecution());
-		registersTable.sort();
+		try {
+			logger.trace("Step");
+			program.step(registers);
+			int lineUnderExec = program.getLineUnderExecution();
+			if (lineUnderExec != -1) {
+				highlightEditorLine(lineUnderExec);
+				registersTable.sort();
+			} else {
+				console.appendText("Execution Ended");
+				Platform.runLater(() -> editor.selectRange(0, 0));
+			}
+		} catch (Exception e) {
+			//meant to catch all so an error in the core does not crach the GUI
+			logger.error(e);
+		}
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked", "unused" })
