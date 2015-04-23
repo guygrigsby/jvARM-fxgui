@@ -8,6 +8,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Set;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -70,17 +71,27 @@ public class Controller {
 		File testFile = new File(path);
 		//loadFile(testFile);
 		editor.setStyle("-fx-highlight-fill: yellow; -fx-highlight-text-fill: black;");
-		editor.setText("label\n"
-				+ "ADD r0, r0, #1     ; \n"
-				+ "CMP r0, #10\n"
-				+ "BNE label");
+		
+		String testEditorContents = 
+				"MOV r0, #0\n"
+				+ "MOV r1, #1\n"
+				+ "MOV r12, #10\n"
+				+ "loop\n"
+				+ "ADD r2, r1, r0\n"
+				+ "MOV r0, r1\n"
+				+ "MOV r1, r2\n"
+				+ "SUB r12, r12, #1\n"
+				+ "CMP r12, #0\n"
+				+ "BNE loop";
+		
+		editor.setText(testEditorContents);
 		rightAccordion.setExpandedPane(registerPane);
 	}
 
 	@FXML
 	public void step() {
 		try {
-			logger.trace("Step");
+			logger.trace("Step: " + program.getInstructionUnderExecution());
 			program.step(registers);
 			int lineUnderExec = program.getLineUnderExecution();
 			if (lineUnderExec != -1) {
@@ -168,7 +179,12 @@ public class Controller {
 		registerMap
 		.addListener((
 				MapChangeListener.Change<? extends String, ? extends Integer> change) -> {
-			registersTable.getItems().setAll(registers.entrySet());
+					if (registers != null) {
+						Set<Map.Entry<String, Integer>> set = registers.entrySet();
+						if (set != null) {
+							registersTable.getItems().setAll(set);
+						}
+					}
 		});
 		return registerMap;
 	}

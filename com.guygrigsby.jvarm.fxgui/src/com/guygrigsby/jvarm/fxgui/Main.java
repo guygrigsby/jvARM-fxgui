@@ -9,6 +9,8 @@ import javafx.stage.Stage;
 
 
 public class Main extends Application {
+	private static final String PROGRAM_TITLE = "jvARM";
+
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -19,6 +21,7 @@ public class Main extends Application {
 			Controller controller = (Controller)loader.getController();
 			controller.setStageAndSetupListeners(primaryStage);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			primaryStage.setTitle(PROGRAM_TITLE);
 			primaryStage.setScene(scene);
 			primaryStage.setMaximized(true);
 			primaryStage.show();
