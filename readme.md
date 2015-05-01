@@ -49,7 +49,7 @@ BNE loop
 3. Press the "Start Debug" button.
 4. Use the "Step" button to execute a single line at a time. 
 
-Important notes:
+**Important notes:**
 * Memory is not implemented yet.
 * Where applicable implemented instructions support flexible second operands
 * New instructions are being implement all the time. Implemented instructions are:
