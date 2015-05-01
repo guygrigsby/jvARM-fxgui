@@ -53,17 +53,16 @@ Important notes:
 * Memory is not implemented yet.
 * Where applicable implemented instructions support flexible second operands
 * New instructions are being implement all the time. Implemented instructions are:
-  * ADD
-  * SUB
-  * RSB
-  * ADC
-  * SBC
-  * RSC
-  * AND
-  * ORR
-  * EOR
-  * BIC
-  * BEQ
-  * B (with all conditional codes)
-  * CMP
-  * MOV
+  * `ADD`
+  * `SUB`
+  * `RSB`
+  * `ADC`
+  * `SBC`
+  * `RSC`
+  * `AND`
+  * `ORR`
+  * `EOR`
+  * `BIC`
+  * `B` (with all conditional codes)
+  * `CMP`
+  * `MOV`
