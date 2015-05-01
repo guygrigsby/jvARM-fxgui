@@ -66,5 +66,6 @@ Important notes:
   * `B` (with all conditional codes)
   * `CMP`
   * `MOV`
+
 ##License
 This project is licensed under the [GNU General Public License](https://www.gnu.org/copyleft/gpl.html)
